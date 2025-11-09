@@ -1,5 +1,0 @@
-<resources>
-    <string name="app_name">TransportDocsManager</string>
-    <string name="notif_channel_name">Expiring Documents</string>
-    <string name="notif_channel_desc">Reminders for documents nearing expiry</string>
-</resources>
