@@ -8,20 +8,28 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: actions/setup-java@v4
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: "17"
 
-      # Gradle wrapper ke bina build karne ke liye
-      - name: Build Debug APK
-        uses: gradle/gradle-build-action@v3
+      # Recommended action (replaces the deprecated gradle/gradle-build-action)
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: 8.7
-          arguments: assembleDebug
+          # Kabhi-kabhi 8.7 download issue deta hai; 8.6 zyada stable hai
+          gradle-version: "8.6"
+          cache-disabled: true
+
+      # Run Gradle WITHOUT wrapper (we installed 8.6 above)
+      - name: Build Debug APK
+        run: gradle assembleDebug --no-daemon --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
