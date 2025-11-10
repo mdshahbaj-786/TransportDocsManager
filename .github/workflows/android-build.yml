@@ -29,11 +29,23 @@ jobs:
           sdkmanager --install "platform-tools" "platforms;android-34" "build-tools;34.0.0"
           yes | sdkmanager --licenses
 
-      # ✅ Gradle 8.7 ko bina wrapper ke bhi use karo
-      - name: Set up Gradle (no wrapper needed)
-        uses: gradle/gradle-build-action@v3
+      # ✅ New recommended action (replaces deprecated gradle/gradle-build-action)
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: "8.7"
+
+      # 🧪 Diagnostics: yahi se pata chal jayega issue kya है
+      - name: Sanity check project
+        run: |
+          echo "=== Gradle version ==="
+          gradle -v
+          echo "=== Repo root listing ==="
+          ls -la
+          echo "=== settings.gradle.kts ==="
+          cat settings.gradle.kts || true
+          echo "=== modules detected by Gradle ==="
+          gradle -q projects || true
 
       - name: Build Debug APK
         run: |
